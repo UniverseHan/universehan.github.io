@@ -30,6 +30,22 @@
             }.bind(this)
           });
         },
+        handleCommentSubmit: function(comment) {
+          // TODO: submit to the server and refresh the list
+          $.ajax({
+            url: this.props.url,
+            dataType: 'json',
+            type: 'POST',
+            data: comment,
+            success: function(data) {
+              this.setState({data: data});
+
+            }.bind(this),
+            error: function(xhr, status, err) {
+              console.error(this.props.url, status, err.toString());
+            }.bind(this)
+          });
+        },
         componentDidMount: function() {
           this.loadCommentsFromServer();
           setInterval(this.loadCommentsFromServer, this.props.pollInterval);
@@ -39,7 +55,7 @@
             <div className="commentBox">
               <h1>Comments</h1>
               <CommentList data={this.state.data} />
-              <CommentForm />
+              <CommentForm onCommentSubmit={this.handleCommentSubmit} />
             </div>
           );
         }
@@ -91,6 +107,34 @@
         {author: "Pete Hunt", text: "This is one comment"},
         {author: "Jordan Walke", text: "This is *another* comment" }
       ];
+
+      var CommentForm = React.createClass({
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var author = React.findDOMNode(this.refs.author).value.trim();
+          var text = React.findDOMNode(this.refs.text).value.trim();
+          if(!text || !author) {
+            return;
+          }
+
+          // TODO: send request to the server
+          this.props.onCommentSubmit({author: author, text: text});
+
+          React.findDOMNode(this.refs.author).value = '';
+          React.findDOMNode(this.refs.text).value = '';
+
+          return;
+        },
+        render: function() {
+          return (
+            <form className="commentForm" onsubmit={this.handleSumit}>
+              <input type="text" placeholder="Your name" ref="author"/>
+              <input type="text" placeholder="Say something..." ref="text"/>
+              <input type="submit" value="Post" />
+            </form>
+          );
+        }
+      });
 
     React.render(
       <CommentBox url="comments.json" pollInterval={2000}/>,
