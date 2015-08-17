@@ -31,7 +31,6 @@
           });
         },
         handleCommentSubmit: function(comment) {
-          // TODO: submit to the server and refresh the list
           $.ajax({
             url: this.props.url,
             dataType: 'json',
@@ -103,11 +102,6 @@
         }
       });
 
-      var data = [
-        {author: "Pete Hunt", text: "This is one comment"},
-        {author: "Jordan Walke", text: "This is *another* comment" }
-      ];
-
       var CommentForm = React.createClass({
         handleSubmit: function(e) {
           e.preventDefault();
@@ -117,7 +111,6 @@
             return;
           }
 
-          // TODO: send request to the server
           this.props.onCommentSubmit({author: author, text: text});
 
           React.findDOMNode(this.refs.author).value = '';
