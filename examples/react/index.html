@@ -12,23 +12,32 @@
   <body>
     <div id="content"></div>
     <script type="text/jsx">
+
+      function loadComments(resultHandler)
+      {
+        $.ajax({
+          url: this.props.url,
+          dataType: 'json',
+          cache: false,
+          success: resultHandler.onSuccess,
+          error: resultHandler.onError
+        });
+      }
+
       var CommentBox = React.createClass({
         getInitialState: function() {
           return {data: []};
         },
         loadCommentsFromServer: function() {
-          $.ajax({
-            url: this.props.url,
-            dataType: 'json',
-            cache: false,
-            success: function(data) {
-              this.setState({data: data});
-            }.bind(this),
-            error: function(xhr, status, err) {
-              alert("error");
-              console.error(this.props.url, status, err.toString());
-            }.bind(this)
-          });
+          loadComments({
+                    success: function (data) {
+                      this.setState({data: data});
+                    }.bind(this),
+                    error: function (xhr, status, err) {
+                      console.error(this.props.url, status, err.toString());
+                    }.bind(this)
+                  }
+          );
         },
         handleCommentSubmit: function(comment) {
           $.ajax({
@@ -59,7 +68,7 @@
           );
         }
       });
-    
+
       var CommentList = React.createClass({
          render: function() {
            var commentNodes = this.props.data.map(function(comment) {
