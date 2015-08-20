@@ -26,6 +26,7 @@
 
       function postComment(comment, resultHandler)
       {
+
         $.ajax({
           url: 'comments.json',
           dataType: 'json',
@@ -35,6 +36,42 @@
           error: resultHandler.error
         });
       }
+
+      function postToNoserv(comment, resultHandler)
+      {
+        /**
+         *
+         * @type {string}
+         */
+        var apiUrl = "https://api.noserv.io";
+
+        /**
+         * @type {string}
+         */
+        var VERSION_URI = "/1";
+
+        /**
+         *
+         * @type {string}
+         */
+        var urlForEntity = apiUrl + VERSION_URI + "/classes/{className}";
+
+
+        $.ajax({
+          type:"POST",
+          beforeSend: function (request)
+          {
+            request.setRequestHeader("Authority", authorizationToken);
+          },
+          url: "entities",
+          data: "json=" + escape(JSON.stringify(createRequestObject)),
+          processData: false,
+          success: function(msg) {
+            $("#results").append("The result =" + StringifyPretty(msg));
+          }
+        });
+      }
+
 
       var CommentBox = React.createClass({
         getInitialState: function() {

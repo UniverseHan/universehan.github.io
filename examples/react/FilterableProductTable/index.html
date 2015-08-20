@@ -39,8 +39,20 @@
                 console.log(this.props);
                 var rows=[];
                 var lastCategory = null;
+
+                /**
+                 * @type {string}
+                 */
                 var filterText = this.props.filterText;
+
+                /**
+                 * @type {boolean}
+                 */
                 var inStockOnly = this.props.inStockOnly;
+
+                /**
+                 * @param{{product: {name: string, stocked: boolean}}
+                 */
                 this.props.products.forEach( function(product) {
                     if (product.name.indexOf(filterText) === -1 || (!product.stocked && inStockOnly)) {
                         return;
@@ -69,7 +81,7 @@
             handleChange: function() {
                 this.props.onUserInput(
                         this.refs.filterTextInput.getDOMNode().value,
-                        this.refs.inStockOnlyInput.getDOMNode().checked
+                        this.refs.inStockOnlyInput.getDOMNode().checked지그
                 )
             },
             render: function() {
